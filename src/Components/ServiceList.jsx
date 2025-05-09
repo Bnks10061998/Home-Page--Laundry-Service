@@ -17,7 +17,7 @@ const services = [
     reviews: "200",
   },
   {
-    title: "Wash & Irons",
+    title: "Dry Cleaning",
     image: Wash,
     rating: "4.2",
     reviews: "200",

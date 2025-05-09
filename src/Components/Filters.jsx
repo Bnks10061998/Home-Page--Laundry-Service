@@ -79,41 +79,44 @@ const Filters = ({ onFilterChange }) => {
 
         {showFilters && (
           <div className="absolute top-14 right-0 bg-white border rounded shadow-lg w-64 p-4 z-10">
-            {/* Ratings Filter */}
-            <div className="mb-4">
-              <span className="text-gray-700 text-sm mb-2 block font-medium">Ratings</span>
-              {[5, 4.5, 4, 3.5].map((rating) => (
-                <label key={rating} className="flex items-center space-x-2 mb-2">
-                  <input
-                    type="checkbox"
-                    value={rating}
-                    checked={selectedRatings.includes(rating)}
-                    onChange={handleRatingChange}
-                    className="w-4 h-4 border-gray-400"
-                  />
-                  <span className="text-sm text-gray-800 flex items-center gap-1">
-                    {rating}
-                    <FaStar className="text-yellow-500 text-xs" />
-                    Stars
-                  </span>
-                </label>
-              ))}
-            </div>
+          <div className="mb-4">
+            <span className="text-gray-700 text-sm mb-2 block font-medium">Ratings</span>
+            {[{ value: 5, label: "Outstanding" },
+              { value: 4.5, label: "Excellent" },
+              { value: 4, label: "Very Good" },
+              { value: 3.5, label: "Good" }].map(({ value, label }) => (
+              <label key={value} className="flex items-center space-x-2 mb-2">
+                <input
+                  type="checkbox"
+                  value={value}
+                  checked={selectedRatings.includes(value)}
+                  onChange={handleRatingChange}
+                  className="w-4 h-4 border-gray-400"
+                />
+                <span className="text-sm text-gray-800 flex items-center gap-1">
+                  {value}
+                  <FaStar className="text-yellow-500 text-xs" />
+                  <span className="ml-1">{label}</span>
+                </span>
+              </label>
+            ))}
+          </div>
+        
+          
 
             {/* Sort Order Filter */}
             <label className="block mb-4">
-              <span className="text-gray-700 text-sm mb-1 block">Sort by Name</span>
+              <span className="text-gray-700 text-sm mb-2 block font-medium">Sort by Name</span>
               <select
                 value={sortOrder}
                 onChange={(e) => setSortOrder(e.target.value)}
-                className="w-full border px-2 py-1 rounded text-sm"
+                className="w-full border border-gray-300 bg-white text-gray-700 rounded-md shadow-sm py-3 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-gray-100 transition-all"
               >
-                <option value="">None</option>
+                <option value="">Select Sorting</option>
                 <option value="asc">Name (A-Z)</option>
                 <option value="desc">Name (Z-A)</option>
               </select>
             </label>
-
             {/* Buttons */}
             <div className="flex gap-2">
               <button
