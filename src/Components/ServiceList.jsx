@@ -1,41 +1,38 @@
-import ServiceCard from "./ServiceCard";
+
 import React from "react";
-import Wash from "../assets/Wash & Iron.jpg"
+import ServiceCard from "./ServiceCard";
+import Wash from "../assets/Wash & Iron.jpg";
+
 const services = [
   {
     title: "Wash & Fold",
     image: Wash,
-    rating: "4.8",
+    rating: "3.8",
     reviews: "200",
-   
   },
   {
     title: "Wash & Iron",
     image: Wash,
-    rating: "4.8",
+    rating: "3.2",
     reviews: "200",
-    
   },
   {
     title: "Wash & Irons",
     image: Wash,
-    rating: "4.8",
+    rating: "4.2",
     reviews: "200",
-   
   },
   {
     title: "Carpet Cleaning",
     image: Wash,
-    rating: "4.8",
+    rating: "4.5",
     reviews: "200",
-    
   },
   {
     title: "Steam iron",
     image: Wash,
-    rating: "4.8",
+    rating: "5",
     reviews: "200",
-    
   },
   {
     title: "Ornamented Wedding Dress",
@@ -45,14 +42,34 @@ const services = [
   },
 ];
 
-const ServiceList = () => (
-  <div className="mt-16 px-32">
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-x-0.5 gap-y-16">
-      {services.map((service, idx) => (
-        <ServiceCard key={idx} {...service} />
-      ))}
+const ServiceList = ({ filters = {} }) => {
+  const { selectedRatings = [], sortOrder = "" } = filters;
+
+  const filteredServices = services
+    .filter((service) => {
+      if (selectedRatings.length > 0) {
+        return selectedRatings.includes(parseFloat(service.rating));
+      }
+      return true;
+    })
+    .sort((a, b) => {
+      if (sortOrder === "asc") {
+        return a.title.localeCompare(b.title);
+      } else if (sortOrder === "desc") {
+        return b.title.localeCompare(a.title);
+      }
+      return 0;
+    });
+
+  return (
+    <div className="mt-16 px-32">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-x-0.5 gap-y-16">
+        {filteredServices.map((service, idx) => (
+          <ServiceCard key={idx} {...service} />
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default ServiceList;

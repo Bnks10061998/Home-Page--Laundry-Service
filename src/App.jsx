@@ -1,14 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./Components/Header";
 import Search from "./Components/Search";
 import Filters from "./Components/Filters";
 import ServiceList from "./Components/ServiceList";
 import CartPage from "./Components/CartPage";
-
 import LaundryServiceDetail from "./Components/LaundryServiceDetail";
 
 function App() {
+  const [filters, setFilters] = useState({
+    sortOrder: "",
+    selectedCategory: "all",
+    selectedRatings: [],
+  });
+
+  const handleFilterChange = (ratings, sortOrder, category) => {
+    setFilters({ selectedRatings: ratings, sortOrder, selectedCategory: category });
+  };
+
   return (
     <Router>
       <Routes>
@@ -19,9 +28,9 @@ function App() {
               <Header />
               <div className="flex items-center mt-4">
                 <Search />
-                <Filters />
+                <Filters onFilterChange={handleFilterChange} />
               </div>
-              <ServiceList />
+              <ServiceList filters={filters} />
             </div>
           }
         />
@@ -33,4 +42,3 @@ function App() {
 }
 
 export default App;
-

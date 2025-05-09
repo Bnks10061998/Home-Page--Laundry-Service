@@ -1,101 +1,11 @@
-// import React, { useState, useRef, useEffect } from "react";
-// import { FaChevronDown, FaFilter } from "react-icons/fa";
-
-// const Filters = () => {
-//   const [showFilters, setShowFilters] = useState(false);
-//   const dropdownRef = useRef(null);
-
-//   const toggleFilters = () => {
-//     setShowFilters((prev) => !prev);
-//   };
-
- 
-//   useEffect(() => {
-//     const handleClickOutside = (event) => {
-//       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-//         setShowFilters(false);
-//       }
-//     };
-
-//     document.addEventListener("mousedown", handleClickOutside);
-//     return () => document.removeEventListener("mousedown", handleClickOutside);
-//   }, []);
-
-//   return (
-//     <div className="flex gap-5 ml-56 mt-4 relative items-center">
-      
-//       <div className="relative">
-//         <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none" />
-//         <select
-//           className="appearance-none pl-8 pr-4 py-3 border bg-blue-100 min-w-[200px] rounded shadow-sm text-base"
-//           defaultValue="all"
-//         >
-//           <option value="all">All Categories</option>
-//           <option value="wash_dry_fold">Wash, Dry, Fold</option>
-//           <option value="shoe_laundry">Shoe Laundry</option>
-//           <option value="ironing">Ironing</option>
-//           <option value="starch_clothes">Starch Clothes</option>
-//           <option value="dry_cleaning">Dry Cleaning</option>
-//           <option value="dyeing_vats">Dyeing Vats</option>
-//         </select>
-//       </div>
-
-      
-//       <div className="relative" ref={dropdownRef}>
-//         <button
-//           onClick={toggleFilters}
-//           className="flex items-center gap-2 border px-8 py-3 rounded bg-blue-100 text-blue-700 text-base"
-//         >
-//           <FaFilter className="text-blue-700" />
-//           Filters
-//         </button>
-
-//         {showFilters && (
-//           <div className="absolute top-14 right-0 bg-white border rounded shadow-lg w-64 p-4 z-10">
-          
-//             <label className="block mb-4">
-//               <span className="text-gray-700 text-sm mb-1 block">Minimum Rating</span>
-//               <select className="w-full border px-2 py-1 rounded text-sm">
-//                 <option value="">Any</option>
-//                 <option value="1">1 Star & up</option>
-//                 <option value="2">2 Stars & up</option>
-//                 <option value="3">3 Stars & up</option>
-//                 <option value="4">4 Stars & up</option>
-//                 <option value="5">5 Stars</option>
-//               </select>
-//             </label>
-
-           
-//             <label className="block mb-4">
-//               <span className="text-gray-700 text-sm mb-1 block">Minimum Rate (₹)</span>
-//               <input
-//                 type="number"
-//                 className="w-full border px-2 py-1 rounded text-sm"
-//                 placeholder="e.g. 100"
-//               />
-//             </label>
-
-//             <button className="mt-2 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
-//               Apply Filters
-//             </button>
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Filters;
-
-
 import React, { useState, useRef, useEffect } from "react";
 import { FaChevronDown, FaFilter, FaStar } from "react-icons/fa";
 
-const Filters = () => {
+const Filters = ({ onFilterChange }) => {
   const [showFilters, setShowFilters] = useState(false);
   const [selectedRatings, setSelectedRatings] = useState([]);
-  const [minRate, setMinRate] = useState("");
-
+  const [sortOrder, setSortOrder] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const dropdownRef = useRef(null);
 
   const toggleFilters = () => {
@@ -103,25 +13,27 @@ const Filters = () => {
   };
 
   const handleRatingChange = (e) => {
-    const value = parseFloat(e.target.value);
+    const ratingValue = parseFloat(e.target.value);
     setSelectedRatings((prev) =>
-      prev.includes(value) ? prev.filter((r) => r !== value) : [...prev, value]
+      prev.includes(ratingValue)
+        ? prev.filter((rating) => rating !== ratingValue)
+        : [...prev, ratingValue]
     );
   };
 
-  const handleMinRateChange = (e) => {
-    setMinRate(e.target.value);
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value);
   };
 
   const applyFilters = () => {
-    console.log("Selected Ratings:", selectedRatings);
-    console.log("Minimum Rate:", minRate);
-    // You can call your filter function here
+    onFilterChange(selectedRatings, sortOrder, selectedCategory);
   };
 
   const clearFilters = () => {
     setSelectedRatings([]);
-    setMinRate("");
+    setSortOrder("");
+    setSelectedCategory("all");
+    onFilterChange([], "", "all");
   };
 
   useEffect(() => {
@@ -142,7 +54,8 @@ const Filters = () => {
         <FaChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none" />
         <select
           className="appearance-none pl-8 pr-4 py-3 border bg-blue-100 min-w-[200px] rounded shadow-sm text-base"
-          defaultValue="all"
+          value={selectedCategory}
+          onChange={handleCategoryChange}
         >
           <option value="all">All Categories</option>
           <option value="wash_dry_fold">Wash, Dry, Fold</option>
@@ -154,7 +67,7 @@ const Filters = () => {
         </select>
       </div>
 
-      {/* Filters Button and Dropdown */}
+      {/* Filters Dropdown */}
       <div className="relative" ref={dropdownRef}>
         <button
           onClick={toggleFilters}
@@ -187,16 +100,18 @@ const Filters = () => {
               ))}
             </div>
 
-            {/* Minimum Rate Filter */}
+            {/* Sort Order Filter */}
             <label className="block mb-4">
-              <span className="text-gray-700 text-sm mb-1 block">Minimum Rate (₹)</span>
-              <input
-                type="number"
+              <span className="text-gray-700 text-sm mb-1 block">Sort by Name</span>
+              <select
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value)}
                 className="w-full border px-2 py-1 rounded text-sm"
-                placeholder="e.g. 100"
-                value={minRate}
-                onChange={handleMinRateChange}
-              />
+              >
+                <option value="">None</option>
+                <option value="asc">Name (A-Z)</option>
+                <option value="desc">Name (Z-A)</option>
+              </select>
             </label>
 
             {/* Buttons */}
