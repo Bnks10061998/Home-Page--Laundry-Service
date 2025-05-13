@@ -86,7 +86,7 @@ import React, { useState } from "react";
 import ServiceCard from "./ServiceCard";
 import Search from "./Search";
 import Wash from "../assets/Wash & Iron.jpg";
-import iron from "../assets/iron.jpg";
+import iron from "../assets/Iron.jpg";
 import fold from "../assets/Fold.jpg";
 import dry from "../assets/Dry.jpg";
 import carpet from "../assets/Carpet.jpg";
