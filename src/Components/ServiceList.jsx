@@ -89,7 +89,7 @@ import Wash from "../assets/Wash & Iron.jpg";
 import iron from "../assets/Iron.jpg";
 import fold from "../assets/Fold.jpg";
 import dry from "../assets/Dry.jpg";
-import carpet from "../assets/Carpet.jpg";
+import carpet from "../assets/carpet.jpg";
 import Steam from "../assets/steam1.jpg";
 const services = [
   {
